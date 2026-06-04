@@ -1,26 +1,236 @@
 @import "tailwindcss";
 
+/* ─── Google Font (Inter) loaded via next/font/google in layout.tsx ─── */
+
+/* ─── Design Tokens (Dark Theme) ──────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: 224 71% 4%;
+  --foreground: 213 31% 91%;
+  --card: 224 71% 6%;
+  --card-foreground: 213 31% 91%;
+  --popover: 224 71% 6%;
+  --popover-foreground: 213 31% 91%;
+  --primary: 217 91% 60%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 222 47% 11%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 223 47% 11%;
+  --muted-foreground: 215 20% 55%;
+  --accent: 216 34% 17%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 63% 51%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 216 34% 17%;
+  --input: 216 34% 17%;
+  --ring: 217 91% 60%;
+  --radius: 0.75rem;
+
+  /* ─── Node Accent Colors ─── */
+  --trigger-green: 142 71% 45%;
+  --message-blue: 217 91% 60%;
+  --logic-purple: 263 70% 50%;
+  --delay-amber: 38 92% 50%;
+  --action-pink: 330 81% 60%;
+
+  /* ─── Gradients ─── */
+  --gradient-start: 217 91% 60%;
+  --gradient-end: 263 70% 50%;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ─── Base Styles ──────────────────────────────────────────────────────── */
+* {
+  border-color: hsl(var(--border));
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-feature-settings: "rlig" 1, "calt" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* ─── Glassmorphism Utilities ──────────────────────────────────────────── */
+.glass {
+  background: hsl(var(--card) / 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid hsl(var(--border) / 0.5);
+}
+
+.glass-strong {
+  background: hsl(var(--card) / 0.8);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid hsl(var(--border) / 0.6);
+}
+
+.glass-subtle {
+  background: hsl(var(--card) / 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid hsl(var(--border) / 0.3);
+}
+
+/* ─── Gradient Utilities ───────────────────────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(135deg, hsl(var(--gradient-start)), hsl(var(--gradient-end)));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-border {
+  position: relative;
+  border: none;
+}
+
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, hsl(var(--gradient-start)), hsl(var(--gradient-end)));
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+}
+
+/* ─── Neon Glow Utilities ──────────────────────────────────────────────── */
+.glow-green {
+  box-shadow: 0 0 20px hsl(var(--trigger-green) / 0.3),
+              0 0 40px hsl(var(--trigger-green) / 0.1);
+}
+
+.glow-blue {
+  box-shadow: 0 0 20px hsl(var(--message-blue) / 0.3),
+              0 0 40px hsl(var(--message-blue) / 0.1);
+}
+
+.glow-purple {
+  box-shadow: 0 0 20px hsl(var(--logic-purple) / 0.3),
+              0 0 40px hsl(var(--logic-purple) / 0.1);
+}
+
+.glow-amber {
+  box-shadow: 0 0 20px hsl(var(--delay-amber) / 0.3),
+              0 0 40px hsl(var(--delay-amber) / 0.1);
+}
+
+.glow-pink {
+  box-shadow: 0 0 20px hsl(var(--action-pink) / 0.3),
+              0 0 40px hsl(var(--action-pink) / 0.1);
+}
+
+/* ─── Scrollbar Styling ────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* ─── Animations ───────────────────────────────────────────────────────── */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+.animate-float { animation: float 6s ease-in-out infinite; }
+.animate-shimmer {
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+.animate-slide-up { animation: slide-up 0.5s ease-out; }
+.animate-slide-in-right { animation: slide-in-right 0.3s ease-out; }
+
+/* ─── React Flow Overrides ─────────────────────────────────────────────── */
+.react-flow__background {
+  background: hsl(var(--background)) !important;
+}
+
+.react-flow__minimap {
+  background: hsl(var(--card) / 0.8) !important;
+  border: 1px solid hsl(var(--border) / 0.5) !important;
+  border-radius: 8px !important;
+}
+
+.react-flow__controls {
+  background: hsl(var(--card) / 0.8) !important;
+  border: 1px solid hsl(var(--border) / 0.5) !important;
+  border-radius: 8px !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+.react-flow__controls-button {
+  background: transparent !important;
+  border-bottom: 1px solid hsl(var(--border) / 0.3) !important;
+  color: hsl(var(--foreground)) !important;
+  fill: hsl(var(--foreground)) !important;
+}
+
+.react-flow__controls-button:hover {
+  background: hsl(var(--accent)) !important;
+}
+
+.react-flow__edge-path {
+  stroke: hsl(var(--muted-foreground) / 0.5) !important;
+  stroke-width: 2 !important;
+}
+
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: hsl(var(--primary)) !important;
+  stroke-width: 3 !important;
+}
+
+.react-flow__handle {
+  width: 12px !important;
+  height: 12px !important;
+  border: 2px solid hsl(var(--primary)) !important;
+  background: hsl(var(--background)) !important;
+}
+
+.react-flow__handle:hover {
+  background: hsl(var(--primary)) !important;
+}
+
+/* ─── Node Accent Borders ──────────────────────────────────────────────── */
+.node-trigger { border-left: 3px solid hsl(var(--trigger-green)); }
+.node-message { border-left: 3px solid hsl(var(--message-blue)); }
+.node-condition { border-left: 3px solid hsl(var(--logic-purple)); }
+.node-delay { border-left: 3px solid hsl(var(--delay-amber)); }
+.node-action { border-left: 3px solid hsl(var(--action-pink)); }
